@@ -1,6 +1,6 @@
 <?php session_start();
 //Include the database class
-require("db.local.class.php");
+require("db.class.php");
 // prevent browsers from caching results
 header( "Expires: Mon, 20 Dec 1998 01:00:00 GMT" );
 header( "Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT" );

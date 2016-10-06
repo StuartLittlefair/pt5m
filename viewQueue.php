@@ -167,7 +167,7 @@ if(isset($_REQUEST['pID'])){
 // create instance of database class
 try{
   // query is created. Get matching results from pointing database
-  require("db.local.class.php");
+  require("db.class.php");
   $db = new mysqldb();
   $db->select_db();
 

@@ -10,7 +10,7 @@ if(empty($_SESSION['u_name'])) {
 if(isset($_REQUEST['id']))
   {
     // connect to DB
-    require("db.local.class.php");
+    require("db.class.php");
     // create instance of database class
     $db = new mysqldb();
     $db->select_db();

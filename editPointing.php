@@ -15,7 +15,7 @@ if(isset($_REQUEST['editSubmit']))
 {
 
 // connect to DB
-require("db.local.class.php");
+require("db.class.php");
 // create instance of database class
 $db = new mysqldb();
 $db->select_db();
@@ -90,7 +90,7 @@ echo "<h3>Pointing updated</h3>";
 $id = $_REQUEST['id'];
 
 // query is created. Get matching results from pointing database
-require("db.local.class.php");
+require("db.class.php");
 
 // create instance of database class
 $db = new mysqldb();

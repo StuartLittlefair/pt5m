@@ -2,7 +2,7 @@
 $queryString = "SELECT * FROM `exposures` WHERE pointingID = " . $_REQUEST['id'];
 
 // query is created. Get matching results from pointing database
-require("db.local.class.php");
+require("db.class.php");
 // create instance of database class
 $db = new mysqldb();
 $db->select_db();

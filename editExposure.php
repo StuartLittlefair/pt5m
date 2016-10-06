@@ -19,7 +19,7 @@ $queryString = $queryString . "numexp = '{$_REQUEST['numexp']}' ";
 $queryString = $queryString . " WHERE id = " . $_REQUEST['id'];
 
 // query is created. update exposure
-require("db.local.class.php");
+require("db.class.php");
 // create instance of database class
 $db = new mysqldb();
 $db->select_db();
@@ -40,7 +40,7 @@ $id = $_REQUEST['id'];
 $pointID = $_REQUEST['pointID'];
 
 // query is created. Get matching results from pointing database
-require("db.local.class.php");
+require("db.class.php");
 
 // create instance of database class
 $db = new mysqldb();
