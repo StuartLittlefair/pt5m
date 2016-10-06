@@ -1,0 +1,209 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pt5m Queue</title>
+    <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-datepicker/1.5.0/css/foundation-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.foundation.min.css">
+</head>
+<body>
+<!-- Top Bar -->
+<div class="top-bar">
+<div class="top-bar-left">
+<ul class="dropdown menu" data-dropdown-menu>
+    <li class="menu-text">pt5m Queue</li>
+    <li><a href="index.php">login</a></li>
+    <li><a href="submit.html">submit</a></li>
+    <li><a href="view.html">view/edit</a></li>
+</ul>
+</div>
+</div>
+<!-- END Top Bar -->
+<div class='callout secondary'>
+<div id="form">
+    <form id="submitform" action="" method="" class="radius" autocomplete="on" data-abide>
+    <div class='row'>
+    <div class='columns small-12'>
+        <h3>pt5m Queue query form</h3>
+        <p>Enter criteria in the form below and click submit to find all matching
+        pointings. Select an object by position <strong>OR</strong> by object name.
+        Add extra constraints if you wish. You can also search without specifying an object</p>
+    </div>
+    </div>
+    <div class='row'>
+    <div class='columns small-6'>
+        <fieldset class="fieldset">
+
+            <label>Object:
+            <input type="text" name="object" spellcheck=True maxlength=35 placeholder="Object Name" pattern="[\w\s]+"/>
+            <span class="form-error" id="objerror">This field must contain Alpha Numeric characters</span>
+            </label>
+
+            <label>Right Ascension:
+            <input type="text" name="ra" spellcheck="true" placeholder="hh:mm:ss"  pattern="\d\d[:\s]\d\d[:\s]\d\d(\.\d*)*" data-validator="ra"/>
+            <span class="form-error" id="raerror">This field must contain a valid ra</span>
+            </label>
+
+            <label>Declination:
+            <input type="text" name="dec" spellcheck="true" placeholder="+dd:mm:ss.s"  pattern="[-\+]\d\d[:\s]\d\d[:\s]\d\d(\.\d*)*" data-validator="dec"/>
+            <span class="form-error" id="decerror">This field must contain a vaild dec</span>
+            </label>
+
+            <label>Box Size (arcmin):
+            <input type="text" name="box" placeholder="5"  value=5 required  pattern="number"/>
+            <span class="form-error" id="objerror">This field must contain a number</span>
+            </label>
+
+        </fieldset>
+       <button aria-label="submit form" class="button radius" type="submit">Submit</button>
+    </div>
+    <div class='columns small-6'>
+        <fieldset class="fieldset">
+            <label>User Name:</label>
+            <input type="text" name="id" maxlength="25" placeholder="User Name">
+
+            <label>Priority:</label>
+            <select name="priority">
+            <option>Any</option>
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            </select>
+
+            <label>Status:</label>
+            <select name="status">
+            <option>Any</option>
+            <option>Pending</option>
+            <option>Completed</option>
+            <option>Aborted</option>
+            <option>Deleted</option>
+            </select>
+
+            <label>valid from Date (UT):</label>
+            <input type="text" name="startDate" id="startDate" data-date-format="yyyy-mm-dd"/>
+
+            <label>until Date:
+            <input type="text" name="endDate" id="endDate" data-date-format="yyyy-mm-dd" data-validator="greater_than" data-greater-than="startDate"/>
+            <span class="form-error" id="endDateError">You must enter an end date (after start date).</span>
+            </label>
+        </fieldset>
+
+    </div> <!-- end column -->
+    </div> <!-- end row -->
+
+    </form>
+</div> <!-- end form div -->
+
+
+<!-- pointings will appear in this div -->
+<div id='row'><div id='columns small-12'>
+    <div id="pTable">
+    </div>
+
+    <!-- exposures will appear in this div -->
+    <div id="expSection">
+    </div>
+</div></div>
+
+
+<!-- modal to edit exposures and pointings -->
+<div class="large reveal" id="editModal" data-reveal>
+</div>
+</div> <!-- end callout -->
+
+
+<script src="js/vendor/jquery.js"></script>
+<script src="js/vendor/what-input.js"></script>
+<script src="js/vendor/foundation.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation-datepicker/1.5.0/js/foundation-datepicker.min.js"></script>
+<script src="js/app.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.foundation.min.js"></script>
+<script src="js/scripts.js"></script>
+<script>
+// on page load
+// wait for the DOM to be loaded
+// capture form submission using AJAX.
+// on form submission, clear form div and place results in pointing table div
+$(document).ready(function(){
+
+    // handle form submission
+    $('#submitform').submit(function(event){
+
+        var options =
+            {
+                url:  'viewQueue.php', // send form output to viewQueue.php
+                data: $('#submitform').serialize(), // get data from form
+                success: showResults // if it's OK, then clear form div
+            };
+
+        // process the form
+        $.ajax(options);
+
+        // stop the form from submitting the normal way and refreshing the page
+        event.preventDefault(); //STOP default action
+    });
+});
+
+// add date pickers
+$(document).ready(function(){
+    $('#startDate').fdatepicker({
+    format: 'yyyy-mm-dd',
+    disableDblClickSelection: true
+    });
+
+    $('#endDate').fdatepicker({
+    format: 'yyyy-mm-dd',
+    disableDblClickSelection: true
+    });
+});
+
+
+// add RA validator
+Foundation.Abide.defaults.validators['ra'] = function($el, required, parent){
+    var value = $el.val();
+    if (value == '' & !required){
+        return true;
+    }
+    value = value.replace(/\s/g,":");
+    var raSplit = value.split(":");
+    var mins = parseFloat(raSplit[1]);
+    var secs = parseFloat(raSplit[2]);
+    var RA = parseFloat(raSplit[0]) + parseFloat(raSplit[1])/60.0 + parseFloat(raSplit[2])/3600.0;
+    return ((RA >= 0.0) && (RA < 24.0) && (mins < 60.0) && (secs < 60.0));
+};
+
+// add DEC validator
+Foundation.Abide.defaults.validators['dec'] = function($el, required, parent){
+    var value = $el.val();
+    if (value == '' & !required){
+        return true;
+    }
+    value = value.replace(/\s/g,":");
+    var decSplit = value.split(":");
+    var dec = parseFloat(decSplit[0]) + parseFloat(decSplit[1])/60.0 + parseFloat(decSplit[2])/3600.0;
+    var mins = parseFloat(decSplit[1]);
+    var secs = parseFloat(decSplit[2]);
+    return ((dec >=-90.0) && (dec <= 90.0) && (mins < 60.0) && (secs < 60.0));
+};
+
+// Enforce END > START
+Foundation.Abide.defaults.validators['greater_than'] = function($el, required, parent) {
+  // parameter 1 is jQuery selector
+  if (!required) return true;
+  var from = $('#'+$el.attr('data-greater-than')).val(), to = $el.val();
+  var fromDT = new Date(from.replace(/\s/g, 'T'));
+  var toDT = new Date(to.replace(/\s/g, 'T'));
+  return (toDT > fromDT);
+};
+</script>
+
+</body>
+</html>

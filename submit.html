@@ -1,0 +1,295 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pt5m Queue</title>
+    <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-datepicker/1.5.0/css/foundation-datepicker.min.css">
+</head>
+
+<body>
+<div class="top-bar">
+<div class="top-bar-left">
+<ul class="dropdown menu" data-dropdown-menu>
+    <li class="menu-text">pt5m Queue</li>
+    <li><a href="index.php">login</a></li>
+    <li><a href="submit.html">submit</a></li>
+    <li><a href="view.html">view/edit</a></li>
+</ul>
+</div>
+</div>
+<div class='callout secondary'>
+<form id="mainform" action="submit.php" method="post" class="radius" autocomplete="on" data-abide>
+<div class='row'>
+    <div class='columns small-12 medium-6'>
+        <label>Obs. Type:</label>
+        <select name="obstype">
+            <option selected value="qsi">QSI</option>
+            <option value="slodar">SLODAR</option>
+        </select>
+
+        <label>Object Name:
+        <input type="text" name="object" spellcheck="true" placeholder="Object Name" required  pattern="[\w\s]+"/>
+        <span class="form-error" id="objerror">This field must contain Alpha Numeric characters</span>
+        </label>
+
+        <label>Right Ascension:
+        <input type="text" name="ra" spellcheck="true" placeholder="hh:mm:ss"required  pattern="\d\d[:\s]\d\d[:\s]\d\d(\.\d*)*" data-validator="ra"/>
+        <span class="form-error" id="raerror">This field must contain a valid ra</span>
+        </label>
+
+        <label>Declination:
+        <input type="text" name="dec" spellcheck="true" placeholder="+dd:mm:ss.s"required  pattern="[-\+]\d\d[:\s]\d\d[:\s]\d\d(\.\d*)*"/>
+        <span class="form-error" id="decerror">This field must contain a vaild dec</span>
+        </label>
+
+        <label>Priority:
+        <select name="priority" required>
+            <option    value="0">0</option>
+            <option selected   value="1">1</option>
+            <option    value="2">2</option>
+            <option    value="3">3</option>
+            <option    value="4">4</option>
+            <option    value="5">5</option>
+        </select>
+        <span class="form-error">You must select a priority</span>
+        </label>
+
+        <label id="minAltLabel">Minimum Altitude:</label>
+        <div class="row">
+        <div class='columns small-9'>
+            <div class="slider" aria-labelledby="minAltLabel" data-slider data-initial-start='35' data-end='90'>
+                <span class="slider-handle"  data-slider-handle role="slider" tabindex="1" aria-controls="sliderOutput2"></span>
+                <span class="slider-fill" data-slider-fill></span>
+            </div>
+        </div>
+        <div class='columns small-3'>
+            <input type="number" name="minAlt" id="sliderOutput2">
+        </div>
+        </div>
+    </div>
+    <div class='columns small-12   medium-6'>
+
+        <label>Minimum Observing Time:
+        <input type="text" name="minTime" spellcheck="true" placeholder="time in secs" required  pattern="number"/>
+        <span class="form-error" id="minTimeError">This field must contain a number</span>
+        </label>
+
+        <label>Moon Constraints:
+        <select name="maxMoon" required>
+            <option selected   value="Dark">Dark</option>
+            <option    value="Grey">Grey</option>
+            <option    value="Bright">Bright</option>
+        </select>
+        <span class="form-error" id="maxMoonError">You must select a value from the dropdown</span>
+        </label>
+
+        <label>start Date (UT):
+        <input type="text" id="startUTC" name="startUTC" data-date-format="yyyy-mm-dd hh:ii" data-date-language="en" required>
+        <span class="form-error" id="startDateError">You must enter a date.</span>
+        </label>
+
+        <label>end Date (UT):
+        <input type="text" id="endUTC" name="endUTC" data-date-format="yyyy-mm-dd hh:ii" data-date-language="en" data-validator="greater_than" data-greater-than="startUTC" required>
+        <span class="form-error" id="endUTCError">You must enter an end date (after start date).</span>
+        </label>
+
+        <div class="row">
+        <div class='column small-4'>
+        <p>Pier Flip:</p>
+        <div class="switch radius small">
+            <input class="switch-input" id="flip" type="checkbox" name="flip">
+            <label class="switch-paddle" for="flip">
+                <span class="show-for-sr">Allow Pier Flip:</span>
+                <span class="switch-active" aria-hidden="true">Yes</span>
+                <span class="switch-inactive" aria-hidden="true">No</span>
+            </label>
+        </div></div>
+
+        <div class='column small-4'>
+        <p>ToO:</p>
+        <div class="switch radius small">
+            <input class="switch-input" id="ToO" type="checkbox" name="ToO">
+            <label class="switch-paddle" for="ToO">
+                <span class="show-for-sr">Time Critical:</span>
+                <span class="switch-active" aria-hidden="true">Yes</span>
+                <span class="switch-inactive" aria-hidden="true">No</span>
+            </label>
+        </div></div>
+
+        <div class='column small-4'>
+        <p>AutoGuide:</p>
+        <div class="switch radius small">
+            <input class="switch-input" id="guide" type="checkbox" name="guide">
+            <label class="switch-paddle" for="guide">
+                <span class="show-for-sr">Autoguiding:</span>
+                <span class="switch-active" aria-hidden="true">Yes</span>
+                <span class="switch-inactive" aria-hidden="true">No</span>
+            </label>
+        </div></div></div>
+
+    </div> <!-- end of first row of controls -->
+    <hr class=""/>
+</div>
+<div id='obsSection' class="row">
+    <div class='columns small-12'>
+
+    </div>
+</div>
+<div class="row">
+    <div class='columns small-12'>
+        <!-- Error stuff -->
+        <!-- Add "display: none" right away -->
+        <div data-abide-error class="alert callout" style="display: none;">
+            <p><i class="fi-alert"></i> There are some errors in your form.</p>
+        </div>
+
+
+        <button type="button" class="button radius" onclick="addExposure()">Add Exposure</button>
+        <button aria-label="submit form" class="button radius" value="Submit" name="formSubmit" type="submit">Submit</button>
+    </div>
+</div>
+</form>
+</div>
+
+<script src="js/vendor/jquery.js"></script>
+<script src="js/vendor/what-input.js"></script>
+<script src="js/vendor/foundation.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation-datepicker/1.5.0/js/foundation-datepicker.min.js"></script>
+<script src="js/app.js"></script>
+<script type="text/javascript">
+var current = 0;
+
+// add date pickers
+$(document).ready(function(){
+    $('#startUTC').fdatepicker({
+    format: 'yyyy-mm-dd hh:ii',
+    disableDblClickSelection: true,
+    pickTime: true
+    });
+
+    $('#endUTC').fdatepicker({
+    format: 'yyyy-mm-dd hh:ii',
+    disableDblClickSelection: true,
+    pickTime: true
+    });
+});
+
+
+// add RA validator
+Foundation.Abide.defaults.validators['ra'] = function($el, required, parent){
+    var value = $el.val();
+    value = value.replace(/\s/g,":");
+    var raSplit = value.split(":");
+    var mins = parseFloat(raSplit[1]);
+    var secs = parseFloat(raSplit[2]);
+    var RA = parseFloat(raSplit[0]) + parseFloat(raSplit[1])/60.0 + parseFloat(raSplit[2])/3600.0;
+    return ((RA >= 0.0) && (RA < 24.0) && (mins < 60.0) && (secs < 60.0));
+};
+
+
+// add DEC validator
+Foundation.Abide.defaults.validators['dec'] = function($el, required, parent){
+    var value = $el.val();
+    value = value.replace(/\s/g,":");
+    var decSplit = value.split(":");
+    var dec = parseFloat(decSplit[0]) + parseFloat(decSplit[1])/60.0 + parseFloat(decSplit[2])/3600.0;
+    var mins = parseFloat(decSplit[1]);
+    var secs = parseFloat(decSplit[2]);
+    return ((dec >=-90.0) && (dec <= 90.0) && (mins < 60.0) && (secs < 60.0));
+};
+
+// Enforce END > START
+Foundation.Abide.defaults.validators['greater_than'] = function($el, required, parent) {
+  // parameter 1 is jQuery selector
+  if (!required) return true;
+  var from = $('#'+$el.attr('data-greater-than')).val(), to = $el.val();
+  var fromDT = new Date(from.replace(/\s/g, 'T'));
+  var toDT = new Date(to.replace(/\s/g, 'T'));
+  return (toDT > fromDT);
+};
+
+function subExposure() {
+    $('#exposure'+current).empty().remove();
+    current--;
+}
+
+function addExposure() {
+
+    //current keeps track of how many exposures we have.
+    current = (current-1)+2;
+
+    var strToAdd = "<div class='row' id='exposure"+current+"'><div class='columns small-6'>";
+    strToAdd += "<label>Type:<select id='type"+current+"' name='type"+current+"' onchange='enableExpElements(this.options[selectedIndex].text,this.id);'><option>SCIENCE</option><option>FOCUS</option><option>DARK</option><option>BIAS</option></select></label>";
+    strToAdd += "<label>Filter: <select id='filter"+current+"' name='filter"+current+"'><option>H</option><option>B</option><option>V</option><option>R</option><option>I</option><option>-</option></select></label>";
+    strToAdd += "<label>Binning:<input type='text' id='binning"+current+"' name='binning"+current+"' placeholder='2' required  pattern='number'/></label>";
+    strToAdd += "</div><div class='columns small-6'>"
+    strToAdd += '<label class=etime>Exposure Time:</label><input type="text" id="etime'+current+'" name="etime'+current+'" placeholder="in secs" required/>';
+    strToAdd += '<label>Num Exposures<input type="text" id="numexp'+current+'" name="numexp'+current+'" placeholder="1" required/></label>';
+    strToAdd += '<button type="button" class="button radius" onClick="subExposure()" id="subExposure'+current+'">Remove Exposure</button></div><div class=columns small-12><hr/></div></div>';
+
+    //var newFields = $(strToAdd).find("select").each(Foundation.libs.forms.append_custom_select);
+    $('#obsSection').append(strToAdd);
+    var newAbide = new Foundation.Abide($('#mainform'));
+    newAbide.destroy();
+    newAbide = new Foundation.Abide($('#mainform'));
+
+
+}
+
+function enableExpElements(expType,obsID){
+	var IDSelector = '#' + obsID;
+    var expNum = parseInt(IDSelector.slice(-1));
+	// get the parent div element of type exposure
+	var expSection = $(IDSelector).parents("#exposure"+expNum);
+	if(expType == "BIAS"){
+	 // within this div, find the right elements and enable or disable
+     expSection.find("label.etime").text('Exposure Time:');
+	 expSection.find("#etime"+expNum).prop('disabled',true);
+     expSection.find("#etime"+expNum).removeAttr('required');
+     expSection.find("#binning"+expNum).prop('disabled',false);
+     expSection.find("#binning"+expNum).prop('required', true);
+	 expSection.find("#filter"+expNum).prop('disabled',true);
+     expSection.find("#filter"+expNum).removeAttr('required');
+	 expSection.find("#numexp"+expNum).prop('disabled',false);
+     expSection.find("#numexp"+expNum).prop('required',true);
+	}else if(expType == "DARK"){
+     expSection.find("label.etime").text('Exposure Time:');
+	 expSection.find("#etime"+expNum).prop('disabled',false);
+     expSection.find("#etime"+expNum).prop('required', true);
+     expSection.find("#binning"+expNum).prop('disabled',false);
+     expSection.find("#binning"+expNum).prop('required', true);
+	 expSection.find("#filter"+expNum).prop('disabled',true);
+     expSection.find("#filter"+expNum).removeAttr('required');
+	 expSection.find("#numexp"+expNum).prop('disabled',false);
+     expSection.find("#numexp"+expNum).prop('required',true);
+	}else if(expType == "FOCUS"){
+     expSection.find("label.etime").text('Focus Offset (ms):');
+	 expSection.find("#etime"+expNum).prop('disabled',false);
+     expSection.find("#etime"+expNum).prop('required', true);;
+     expSection.find("#binning"+expNum).prop('disabled',true);
+     expSection.find("#binning"+expNum).removeAttr('required');
+	 expSection.find("#filter"+expNum).prop('disabled',false);
+     expSection.find("#filter"+expNum).prop('required', true);;
+	 expSection.find("#numexp"+expNum).prop('disabled',true);
+     expSection.find("#numexp"+expNum).removeAttr('required');
+	}else{
+     expSection.find("label.etime").text('Exposure Time:');
+	 expSection.find("#etime"+expNum).prop('disabled',false);
+     expSection.find("#etime"+expNum).prop('required', true);
+     expSection.find("#binning"+expNum).prop('disabled',false);
+     expSection.find("#binning"+expNum).prop('required', true);
+	 expSection.find("#filter"+expNum).prop('disabled',false);
+     expSection.find("#filter"+expNum).prop('required', true);
+	 expSection.find("#numexp"+expNum).prop('disabled',false);
+     expSection.find("#numexp"+expNum).prop('required',true);
+	}
+}
+</script>
+
+</body>
+</html>
+
