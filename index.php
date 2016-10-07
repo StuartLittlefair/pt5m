@@ -30,7 +30,7 @@
   if(empty($_SESSION['u_name'])){
   ?>
   <!-- display login form -->
-  <form method="post" action="" id="login_form" class="radius" autocomplete="on" data-abide>
+  <form method="post" action="" id="login_form" class="radius" autocomplete="on" novalidate data-abide>
   <div class="row">
   <div class='columns medium-4'>
     <p>

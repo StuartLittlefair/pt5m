@@ -117,7 +117,7 @@ if(strcmp($uid,$_SESSION['u_name']) !=0 ){
 }
 ?>
 
-<form data-abide id="editform" class="radius" action="" method="">
+<form data-abide id="editform" class="radius" action="" method="" novalidate>
 <?php echo "<h3>pt5m pointing edit Form for pointing #" . $id . "</h3>";?>
 
 

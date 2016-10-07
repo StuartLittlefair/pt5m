@@ -66,7 +66,7 @@ $result = $db->fetch_array($result);
 $db->kill();
 ?>
 
-<form data-abide class='radius' id="editExpform" action="" method="">
+<form data-abide class='radius' id="editExpform" action="" method="" novalidate>
 <?php echo "<h3>pt5m exposure edit Form for exposure #" . $id . "</h3>";?>
 
 <input type="hidden" name="id" <?php echo "value='" . $id . "'"; ?> />
