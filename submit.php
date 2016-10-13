@@ -67,9 +67,14 @@ if (isset($_POST['formSubmit'])) {
   $mode = $_POST['obstype'];
 
   // make SQL dateTime from Date and Time entries
-  $startUT = $_POST['startUTC'];
-  $endUT = $_POST['endUTC'];
-
+  if (isset($_POST["startUTC"])){
+      $startUT = $_POST['startUTC'];
+      $endUT = $_POST['endUTC'];
+  }else{
+      $startUT = $_POST['startDate'] . " " . $_POST['startTime'];
+      $endUT = $_POST['endDate'] . " " . $_POST['endTime'];
+  }
+  
   // check it's valid
   $format = 'd-m-Y H:i';
   $begin = new DateTime($startUT,new DateTimeZone('UTC'));
