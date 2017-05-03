@@ -106,19 +106,19 @@ if (isset($_POST['formSubmit'])) {
 
   // parse pier flip
   $flip = 0;
-  if($_POST['flip'] == "on"){
+  if(($_POST['flip'] == "on") || ($_POST['flip'] == "Yes") ){
     $flip = 1;
   }
 
   // parse time critical flag
   $ToO = 0;
-  if($_POST['ToO'] == "on"){
+  if(($_POST['ToO'] == "on") || ($_POST['ToO'] == "Yes")){
   	$ToO = 1;
   }
 
   // parse guiding flag
   $guide = 0;
-  if($_POST['guide'] == "on"){
+  if(($_POST['guide'] == "on") || ($_POST['guide'] == "Yes")){
     $guide = 1;
   }
 
