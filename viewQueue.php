@@ -148,7 +148,7 @@ else if(!empty($_REQUEST['startDate']) && empty($_REQUEST['endDate']))
     // only start date given, all runs later than start date
     $startUTC = $_REQUEST['startDate'];
     $queryString = $queryString .
-	     " (startUTC > to_date('" . $startUTC . "', '%Y-%m-%d') )";
+	     " (startUTC > str_to_date('" . $startUTC . "', '%Y-%m-%d') )";
   }
 
 // put joining AND in string where needed
