@@ -259,7 +259,7 @@ echo "<input type='hidden' name='editSubmit'/>"
     <div class='column small-4'>
       <p>Pier Flip:</p>
       <div class="switch radius small">
-          <input class="switch-input" id="flip" type="checkbox" name="flip" <?php if ($result['flip']){echo "checked";}?>>
+          <input class="switch-input" id="flip" type="checkbox" name="flip" <?php if ($result['pierFlip']){echo "checked";}?>>
           <label class="switch-paddle" for="flip">
               <span class="show-for-sr">Allow Pier Flip:</span>
               <span class="switch-active" aria-hidden="true">Yes</span>
