@@ -4,17 +4,16 @@ header('Content-type: application/json');
 // connect to DB
 require("db.class.php");
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 
 // get encoding of observations from POST
 $decode = stripslashes($_REQUEST['jsonObsList']);
-$arr = json_decode($decode,true) or die("Can't decode obsList");
+$arr = json_decode($decode, true) or die("Can't decode obsList");
 
-//check everything defined for each observation
+// check everything defined for each observation
 $dontWantTheseHere  = array(NULL);
 foreach($arr as $obs){
-	if ( count(array_intersect($obs,$dontWantTheseHere)) >= 1)
+	if ( count(array_intersect($obs, $dontWantTheseHere)) >= 1)
 	{
 		$myArgs["success"] = False;
 		$myArgs["reason"] = "not all params supplied";
@@ -23,12 +22,12 @@ foreach($arr as $obs){
 	}
 }
 
-$queryString = mysql_insert_observations('obslog',$arr);
+$queryString = mysql_insert_observations('obslog', $arr);
 $result = $db->query($queryString);
 
 print json_encode($result);
 
-$db->kill();
+$db->close();
 
 /////////////////////////////////////////////////////////////////////
 function mysql_insert_observations($table,$obsArr){
@@ -37,7 +36,7 @@ function mysql_insert_observations($table,$obsArr){
 		$fields[] = '`' . $field . '`';
 	}
 	$field_list = join(',',$fields);
-	
+
 	$valuesList = "";
 	foreach($obsArr as $obs){
 		$values = NULL;

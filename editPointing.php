@@ -17,8 +17,7 @@ if(isset($_REQUEST['editSubmit']))
 // connect to DB
 require("db.class.php");
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 
 // process the edit
 // make SQL dateTime from Date and Time entries
@@ -82,7 +81,7 @@ $queryString = $queryString . "status = 'defined' ";
 $queryString = $queryString . " WHERE pointingID = " . $_REQUEST['pointingID'];
 // update pointing
 $result = $db->query($queryString);
-$db->kill();
+$db->close();
 echo "<h3>Pointing updated</h3>";
 
 }else{
@@ -93,20 +92,19 @@ $id = $_REQUEST['id'];
 require("db.class.php");
 
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 
 $queryString = "SELECT * FROM `pointings` WHERE pointingID = " . $id;
 
 
 $result = $db->query($queryString);
 // should be no more than one result. if there is, we've got trouble
-$numRes = $db->num_rows($result);
+$numRes = $result->num_rows;
 
 if($numRes > 1) die("Error: more than one pointing is associated with this ID. Contact Queue administrator");
-$result = $db->fetch_array($result);
-$db->kill();
-
+$result->data_seek(0);
+$result = $result->fetch_array();
+$db->close();
 
 // get user for this pointing
 $uid = $result['userID'];

@@ -57,8 +57,7 @@ if (isset($_POST['formSubmit'])) {
   $count--;
 
   //create instance of database class
-  $db = new mysqldb();
-  $db->select_db();
+  $db = db_connection();
 
   // parse values where necessary
   // NOTE: this section needs updating to block security holes, which are currently gaping
@@ -74,7 +73,7 @@ if (isset($_POST['formSubmit'])) {
       $startUT = $_POST['startDate'] . " " . $_POST['startTime'];
       $endUT = $_POST['endDate'] . " " . $_POST['endTime'];
   }
-  
+
   // check it's valid
   $format = 'd-m-Y H:i';
   $begin = new DateTime($startUT,new DateTimeZone('UTC'));
@@ -156,7 +155,7 @@ if (isset($_POST['formSubmit'])) {
 		       mysql_real_escape_string($guide) );
   $result_queue = $db->query($sql_queue);
   // get pointingID
-  $inserted_pointing_id = $db->last_insert_id();
+  $inserted_pointing_id = $db->insert_id;
 
   // how many exposures to add?
 
@@ -189,7 +188,7 @@ if (isset($_POST['formSubmit'])) {
   }
 
   //disconnect mysql connection
-  $db->kill();
+  $db->close();
 
   // put ra and dec back into human readable strings
   $ra = raString($ra);

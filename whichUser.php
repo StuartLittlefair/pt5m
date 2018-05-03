@@ -9,9 +9,7 @@ $PID = array_key_exists('pID',$_REQUEST) ? $_REQUEST['pID'] : '1';
 // connect to DB
 require("db.class.php");
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
-
+$db = db_connection();
 
 $queryString = "SELECT userID FROM `pointings` WHERE pointingID='" . $PID ."';";
 if (!is_numeric($PID)){
@@ -19,15 +17,16 @@ if (!is_numeric($PID)){
 }else{
 	$result = $db->query($queryString);
 
-	$numRes = $db->num_rows($result);
+	$numRes = $result->num_rows;
 	if($numRes == 0){
 	  print json_encode("No Results Found");
 	}
 	else
 	{
-	  $rows =  $db->fetch_assoc($result);
+		$result->data_seek(0);
+	  $rows =  $result->fetch_assoc();
 	  print json_encode($rows);
 	}
 }
-$db->kill();
+$db->close();
 ?>

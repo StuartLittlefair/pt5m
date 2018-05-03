@@ -15,8 +15,7 @@ $pid    = json_decode($_REQUEST['pID']);
 // connect to DB
 require("db.class.php");
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 
 if($havePID){
 	if($haveStatus){
@@ -38,24 +37,26 @@ if($havePID){
 }
 $result = $db->query($queryString);
 
-$numRes = $db->num_rows($result);
+$numRes = $result->num_rows;
 if($numRes == 0){
   print json_encode("No Results Found");
 }
 else
 {
   $rows = array();
-  while($pointing = $db->fetch_assoc($result))
+  $result->data_seek(0);
+  while($pointing = $result->fetch_assoc())
   {
 	$queryString = "SELECT * FROM `exposures` WHERE pointingID = " . $pointing['pointingID'];
 
 	$resultExp = $db->query($queryString);
-	$numRes = $db->num_rows($resultExp);
+	$numRes = $resultExp->num_rows;
 	#if($numRes == 0) continue; //skip pointings with no exposures
-	
+
 	// fill array with exposures for this pointing
 	$exposures = array();
-	while($exp = $db->fetch_assoc($resultExp))
+	$resultExp->data_seek(0);
+	while($exp = $resultExp->fetch_assoc())
 	{
 		$exposures[] = $exp;
 	}
@@ -65,5 +66,5 @@ else
   }
   print json_encode($rows);
 }
-$db->kill();
+$db->close();
 ?>

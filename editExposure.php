@@ -21,8 +21,7 @@ $queryString = $queryString . " WHERE id = " . $_REQUEST['id'];
 // query is created. update exposure
 require("db.class.php");
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 // update exposure
 $result = $db->query($queryString);
 
@@ -43,12 +42,12 @@ $pointID = $_REQUEST['pointID'];
 require("db.class.php");
 
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 
 // get user for this pointing
 $result = $db->query("SELECT userID from `pointings` WHERE pointingID = " . $_REQUEST['pointID']);
-$row = $db->fetch_array($result);
+$result->data_seek(0);
+$row = $result->fetch_array();
 $uid = $row[0];
 $match = strcmp($uid,$_SESSION['u_name']);
 
@@ -60,10 +59,11 @@ $queryString = "SELECT * FROM `exposures` WHERE id = " . $id;
 $result = $db->query($queryString);
 
 // should be no more than one result. if there is, we've got trouble
-$numRes = $db->num_rows($result);
-if($numRes>1) die("Error: more than one exposure is associated with this ID. Contact Queue administrator");
-$result = $db->fetch_array($result);
-$db->kill();
+$numRes = $result->num_rows;
+if($numRes > 1) die("Error: more than one exposure is associated with this ID. Contact Queue administrator");
+$result->data_seek(0);
+$result = $result->fetch_array();
+$db->close();
 ?>
 
 <form data-abide class='radius' id="editExpform" action="" method="" novalidate>

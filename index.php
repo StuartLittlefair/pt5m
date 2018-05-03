@@ -81,10 +81,11 @@
   // connect to DB
   require("db.class.php");
   // create instance of database class
-  $db = new mysqldb();
-  $db->select_db();
+  $db = db_connection();
+
   $result = $db->query("SELECT fullName from `tbl_user` WHERE user_name = '" .$uid . "'");
-  $row = $db->fetch_array($result);
+  $result->data_seek(0);
+  $row = $result->fetch_array();
   $fullName = $row['fullName'];
 
   echo '<div class="row">';

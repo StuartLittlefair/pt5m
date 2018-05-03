@@ -15,10 +15,9 @@ $pid    = json_decode($_REQUEST['pID']);
 // connect to DB
 require("db.class.php");
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 
-if($havePID){	
+if($havePID){
 	if($haveStatus){
 		$queryString = "SELECT *,pointings.pointingID AS pID  FROM `pointings` as p LEFT JOIN `exposures` ON pointings.pointingID=exposures.pointingID WHERE status='" . $status ."' AND pointings.pointingID IN (";
 	}else{
@@ -38,18 +37,19 @@ if($havePID){
 }
 $result = $db->query($queryString);
 
-$numRes = $db->num_rows($result);
+$numRes = $result->num_rows;
 if($numRes == 0){
   print json_encode("No Results Found");
 }
 else
 {
   $rows = array();
-  while($item = $db->fetch_assoc($result))
+  $result->data_seek(0);
+  while($item = $result->fetch_assoc())
   {
     $rows[] = $item;
    }
    print json_encode($rows);
 }
-$db->kill();
+$db->close();
 ?>

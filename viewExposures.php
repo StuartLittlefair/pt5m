@@ -4,14 +4,14 @@ $queryString = "SELECT * FROM `exposures` WHERE pointingID = " . $_REQUEST['id']
 // query is created. Get matching results from pointing database
 require("db.class.php");
 // create instance of database class
-$db = new mysqldb();
-$db->select_db();
+$db = db_connection();
 // get matching exposures
 $result = $db->query($queryString);
 
 echo "<p>Viewing exposures for pointing with id # " . $_REQUEST['id'] . "</p>";
 $expArr = array();
-while($row = $db->fetch_array($result))
+$result->data_seek(0);
+while($row = $result->fetch_array())
   {
     $expArr[] = array(
 		      "id"      => $row['id'],
@@ -23,7 +23,7 @@ while($row = $db->fetch_array($result))
 		      "numexp"  => $row['numexp']
 		      );
   }
-  $db->kill();
+  $db->close();
 ?>
 <table id="exposures" cellspacing="0">
 <caption>Exposures submitted for this pointing</caption>

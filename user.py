@@ -13,6 +13,6 @@ def getPage(url,data=None):
 
 data={}
 data['pID'] = 1191
-jsonResp = getPage("http://slittlefair.staff.shef.ac.uk/pt5m/whichUser.php",data=data)
+jsonResp = getPage("http://slittlefair.staff.shef.ac.uk/pt5m/whichUser.php", data=data)
 result = json.loads(jsonResp)
 print result['userID']

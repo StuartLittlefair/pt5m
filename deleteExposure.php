@@ -12,17 +12,20 @@ if(isset($_REQUEST['id']))
     // connect to DB
     require("db.class.php");
     // create instance of database class
-    $db = new mysqldb();
-    $db->select_db();
-
+    $db = db_connection();
 
     // get user for this pointing
     $result = $db->query("SELECT userID from `pointings` WHERE pointingID = " . $_REQUEST['pID']);
-    $row = $db->fetch_array($result);
+    if ($result->num_rows == 0){
+      echo "No such pointing";
+      exit();
+    }
+    $result->data_seek(0);
+    $row = $result->fetch_array();
     $uid = $row[0];
-    $match = strcmp($uid,$_SESSION['u_name']);
+    $match = strcmp($uid, $_SESSION['u_name']);
 
-    if(strcmp($uid,$_SESSION['u_name']) !=0 ){
+    if(strcmp($uid, $_SESSION['u_name']) !=0 ){
       echo "This pointing belongs to " . $uid;
       exit();
     }
@@ -36,5 +39,5 @@ if(isset($_REQUEST['id']))
 
     echo "OK";
   }
-  $db->kill();
+  $db->close();
 ?>

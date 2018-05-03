@@ -168,11 +168,10 @@ if(isset($_REQUEST['pID'])){
 try{
   // query is created. Get matching results from pointing database
   require("db.class.php");
-  $db = new mysqldb();
-  $db->select_db();
+  $db = db_connection();
 
   $result = $db->query($queryString);
-  $numRes = $db->num_rows($result);
+  $numRes = $result->num_rows;
 }catch (Exception $e) {
   send_error_retry("SQL query failed", "view.html");
 }
@@ -184,7 +183,8 @@ if($numRes == 0){
 $entries = array();
 
 date_default_timezone_set("GMT");
-while($row = $db->fetch_array($result))
+$result->data_seek(0);
+while($row = $result->fetch_array())
   {
     $pointingID = $row[0];
     $object     = $row[1];
@@ -216,7 +216,7 @@ while($row = $db->fetch_array($result))
 		       "stopUT" => $stopUT,
 		       "status" => $status);
   }
-  $db->kill();
+  $db->close();
 ?>
 
 <?php
@@ -264,9 +264,9 @@ if($numRes == 1) $matchString = "matches";
 foreach($entries as $entry)
 {
   $startUT = $entry['startUT'];
-  $startDate = $startUT->format('Y-m-d');
+  $startDate = $startUT->format('Y-m-d H:i');
   $stopUT = $entry['stopUT'];
-  $stopDate = $stopUT->format('Y-m-d');
+  $stopDate = $stopUT->format('Y-m-d H:i');
   $pointID = $entry['id'];
   echo "<tr>";
   echo "<td>{$entry['object']}</td>";
